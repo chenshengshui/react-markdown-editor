@@ -1,6 +1,6 @@
 # react-markdown-editor
 使用React编写的markdown编辑器，支持语法高亮，和快捷键
-[view model](https://github.com/chenshengshui/react-markdown-editor)
+[view model](https://github.com/chenshengshui/react-markdown-editor/dist/index.html)
 # Getting Started
 Install dependencies
 ```
