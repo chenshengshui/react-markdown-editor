@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	.avater{
+		width: 50px;
+	}
+</style>
+<body>
+	<div>
+		<label>文章名：<input type="text" class="article"></label>
+		<label>类型:<input type="text" class="type"></label>
+		<label>作者:<input type="text" class="author"></label>
+		<label>封面:<input type="file" class="image"></label>
+	</div>
+	<button class="add">新增</button>
+	<button class="get">拉取数据</button>
+	<div style="width: 100%;margin-top: 20px;">
+		<table style="width:100%;border:1px solid #efefef;text-align: center;" class="datatable">
+			<tr>
+				<td>文章名</td>
+				<td>类型</td>
+				<td>作者</td>
+				<td>封面</td>
+				<td>操作</td>
+			</tr>
+		</table>
+	</div>
+</body>
+<script>
+	Object.prototype.append = function(newElem){ 
+ 	this.innerHTML += newElem; 
+ 	console.log(this)
+ 	return this; 
+	} 
+	var $ = function(){
+		var obj = new Object();
+		obj.getJson = function(url){
+			var promise = new Promise(function(resolve,reject){
+				var client = new XMLHttpRequest();
+				client.open('GET',url);
+				client.onreadystatechange = handler;
+				client.responseType = 'json';
+				client.setRequestHeader('Accept','application/json');
+				client.send();
+				function handler(){
+					if(this.readyState !== 4){
+						return;
+					}
+					if(this.status === 200){
+						resolve(this.response);
+					}else{
+						reject(new Error(this.statusText));
+					}
+				}				
+			});
+			return promise;
+		};
+		obj.postData = function(url,data){
+			var promise = new Promise(function(resolve,reject){
+				var client = new XMLHttpRequest();
+				client.open('post',url);
+				client.onreadystatechange = handler;
+				client.responseType = 'json';
+				client.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+				var datastr = '';
+				for(var i in data){
+					datastr += i +　'=' + data[i] + '&';
+				}
+				console.log(datastr);
+				client.send(datastr.substr(0,datastr.length-1));
+				function handler(){
+					if(this.readyState !== 4){
+						return;
+					}
+					if(this.status === 200){
+						resolve(this.response);
+					}else{
+						reject(new Error(this.statusText));
+					}
+				}
+			})
+			return promise;
+		}
+		obj.uploadPic = function(url,data){
+			var promise = new Promise(function(resolve,reject){
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.open('post',url);
+				xmlhttp.send(data);
+				xmlhttp.onreadystatechange = handler;
+				function handler(){
+					if(this.readyState !== 4){
+						return;
+					}
+					if(this.status === 200){
+						resolve(this.response);
+					}else{
+						reject(new Error(this.statusText));
+					}
+				}				
+			})
+			return promise;
+		}
+		return obj;
+	}();
+	var host = 'http://119.23.238.79:8081';
+	// var host = 'http://test.com:8081';
+	document.querySelector('.get').onclick = function () {
+		$.getJson(host+'/getData').then(function(data){
+			if(Array.isArray(data)){
+				for(var i=0;i<data.length;i++){
+					document.querySelector('.datatable').innerHTML += '<tr><td>'+data[i].article +'</td><td>' + data[i].type + 
+					'</td><td>' + data[i].author + '</td><td><img class="avater" src="./'+data[i].picture+'"></td><td><button class="delete" data-id="'+data[i].id+'">删除</button><button class="mend" data-id="'+data[i].id+'">修改</button></td></tr>';
+				}
+			}
+			console.log(data)
+		},function(err){
+			console.log('出错了',err);
+		})
+	}
+	document.querySelector('.add').onclick = function () {
+		var file = document.querySelector('.image').files[0];
+		var formData = new FormData();
+		formData.append('image',file);
+		$.uploadPic(host+'/file_upload',formData).then(function(data){
+			var data = JSON.parse(data);
+			var obj = new Object();
+			obj.picture = data.filename;
+			obj.article = document.querySelector('.article').value;
+			obj.type = document.querySelector('.type').value;
+			obj.author = document.querySelector('.author').value;
+			$.postData(host+'/addData',obj).then(function(data){
+				console.log(data);
+			},function(err){
+				console.log('出错了',err);
+			});
+		},function(err){
+			console.log('出错了',err);
+		});
+	}
+
+	//删除数据
+	document.addEventListener('click',function(e){
+		console.log(e.target);
+		if(e.target.className=='delete'){
+			var id = e.target.dataset.id;
+			$.getJson(host+'/delData?id='+id).then(function(data){
+				console.log(data);
+			},function(err){
+
+			})
+		}
+	},true)
+</script>
+</html>

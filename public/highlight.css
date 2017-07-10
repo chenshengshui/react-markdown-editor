@@ -1,0 +1,88 @@
+.markdown blockquote{
+    display: block;
+    padding: 10PX;
+    background-color: #aaa;
+    border-left: 4PX solid #0271BC;
+}
+/*代码块样式*/
+.markdown pre code {
+    display: block;
+    background: #333333;
+    padding: 10PX;
+    border-radius: 4PX;
+    color: #fff;
+}
+/*有序列表*/
+.markdown ol {
+    display: block;
+    list-style-type: decimal;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+.markdown ol li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.markdown ul {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 40px;
+}
+.markdown ul li{
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.markdown a {
+    color: #0271BC;
+    text-decoration: underline;
+}
+.markdown a:hover{
+    color: #0271BC;
+    text-shadow: 0px 0px 1px #fff;
+}
+.markdown a:hover:after{
+    content: '这是链接';  
+}
+.markdown img {
+    max-width: 100%;
+    border-radius: 4PX;
+    padding: 4PX;
+    border: 1px solid #efefef;
+}
+.markdown hr {
+    border: 1px dashed #999;
+}
+.markdown h1, .markdown h2 {
+    padding-bottom: 8px;
+    border-bottom: 1px dotted #ccc;
+}
+.hljs {
+	display: block;
+	padding: .5em;
+	background: #272822;
+}
+.hljs-class,.hljs-keyword{
+    color: #82D842;
+}
+.hljs-tag,.hljs-number,.hljs-function,.hljs-built_in{
+    color: #EA2000;
+}
+.hljs-rules{
+    color: #fff;
+}
+.hljs-attribute{
+    color: #0271BC;
+}
+.hljs-value,.hljs-hexcolor{
+    color: #39D4ED;
+}
+.hljs-comment{
+    color: #666;
+}
